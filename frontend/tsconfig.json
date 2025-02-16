@@ -1,0 +1,29 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+
+
+ 
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "strict": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "target": "es6",
+    "lib": ["dom", "es6"],
+    "allowSyntheticDefaultImports": true
+  }
+
+
+}
+

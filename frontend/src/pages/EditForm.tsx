@@ -11,6 +11,7 @@ export default function EditForm() {
   const { id } = useParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
@@ -21,11 +22,15 @@ export default function EditForm() {
       })
       .catch(() => {
         toast.error("Failed to fetch quiz information");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }, [id]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     axios
       .put(`/quizzes/${id}`, { title, description })
       .then(() => {
@@ -34,6 +39,9 @@ export default function EditForm() {
       })
       .catch(() => {
         toast.error("Failed to update quiz");
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -41,26 +49,37 @@ export default function EditForm() {
     <div className="flex justify-center items-center min-h-screen p-4">
       <Card className="p-6 w-full max-w-md shadow-lg">
         <h2 className="text-xl font-semibold mb-4 text-center">Edit Quiz</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            type="text"
-            placeholder="Quiz Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-          <Input
-            type="text"
-            placeholder="Quiz Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-          <Button type="submit" className="w-full">
-            Update Quiz
-          </Button>
-        </form>
+        {loading ? (
+          <div className="text-center">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              type="text"
+              placeholder="Quiz Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              disabled={loading}
+            />
+            <Input
+              type="text"
+              placeholder="Quiz Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              disabled={loading}
+            />
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Loading..." : "Update Quiz"}
+            </Button>
+          </form>
+        )}
       </Card>
     </div>
   );
 }
+

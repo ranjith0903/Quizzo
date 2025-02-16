@@ -13,23 +13,37 @@ interface Quiz {
 
 const Dashboard: React.FC = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([] as Quiz[]);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get<Quiz[]>("/quizzes")
       .then(response => response.data)
-      .then(quizzes => setQuizzes(quizzes ?? []))
-      .catch(() => console.log("no quizzes"));
+      .then(quizzes => {
+        setQuizzes(quizzes ?? []);
+        setLoading(false);
+      })
+      .catch(() => {
+        console.log("no quizzes");
+        setLoading(false);
+      });
   }, []);
 
   const handleDelete = (id: string) => {
+    setDeleting(id);
     axios
       .delete(`/quizzes/${id}`)
       .then(() => {
         setQuizzes(prev => prev.filter(quiz => quiz.id !== id));
+        setDeleting(null);
         toast.success("Quiz deleted successfully");
       })
-      .catch(() => toast.error("Failed to delete quiz"));
+      .catch(() => {
+        setDeleting(null);
+        toast.error("Failed to delete quiz");
+      });
   };
 
   return (
@@ -41,7 +55,9 @@ const Dashboard: React.FC = () => {
         </Link>
       </div>
 
-      {quizzes.length === 0 ? (
+      {loading ? (
+        <p className="text-center text-gray-500">Loading...</p>
+      ) : quizzes.length === 0 ? (
         <p className="text-center text-gray-500">No quizzes available</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -58,8 +74,9 @@ const Dashboard: React.FC = () => {
                 <Button
                   variant="destructive"
                   onClick={() => handleDelete(quiz.id)}
+                  disabled={deleting === quiz.id}
                 >
-                  Delete
+                  {deleting === quiz.id ? "Loading..." : "Delete"}
                 </Button>
               </div>
             </Card>
@@ -71,3 +88,4 @@ const Dashboard: React.FC = () => {
 };
 
 export default Dashboard;
+

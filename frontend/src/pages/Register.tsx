@@ -10,15 +10,19 @@ const RegisterPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post("/auth/register", { username, password });
       toast.success("Registration successful! Please log in.");
       navigate("/login");
     } catch (error) {
       toast.error("Registration failed. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,6 +39,7 @@ const RegisterPage: React.FC = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            disabled={loading}
           />
           <Input
             type="password"
@@ -42,8 +47,11 @@ const RegisterPage: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
-          <Button type="submit" className="w-full">Register</Button>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Loading..." : "Register"}
+          </Button>
         </form>
         <p className="text-center mt-4 text-gray-600 dark:text-gray-300">
           Already registered?{" "}
@@ -57,3 +65,4 @@ const RegisterPage: React.FC = () => {
 };
 
 export default RegisterPage;
+

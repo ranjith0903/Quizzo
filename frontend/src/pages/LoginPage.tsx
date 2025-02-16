@@ -13,9 +13,11 @@ interface LoginPageProps {
 const LoginPage: React.FC<LoginPageProps> = ({ setAuthenticated }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       const response = await axios.post("/auth/login", { username, password });
       const { token } = response.data;
@@ -25,6 +27,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ setAuthenticated }) => {
       navigate("/dashboard");
     } catch (error) {
       toast.error("Invalid credentials");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,6 +45,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ setAuthenticated }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
+            disabled={loading}
           />
           <Input
             type="password"
@@ -48,8 +53,11 @@ const LoginPage: React.FC<LoginPageProps> = ({ setAuthenticated }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            disabled={loading}
           />
-          <Button type="submit" className="w-full">Login</Button>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Loading..." : "Login"}
+          </Button>
         </form>
         <p className="text-center mt-4 text-gray-600 dark:text-gray-400">
           Not registered?{" "}
@@ -63,3 +71,4 @@ const LoginPage: React.FC<LoginPageProps> = ({ setAuthenticated }) => {
 };
 
 export default LoginPage;
+

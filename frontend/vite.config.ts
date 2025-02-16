@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://quizzo-oyf3.onrender.com",
+        target: "http://localhost:5000",
       },
     },
   },

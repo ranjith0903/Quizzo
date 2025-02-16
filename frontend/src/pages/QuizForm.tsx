@@ -10,15 +10,19 @@ const QuizForm: React.FC = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post("/quizzes", { title, description });
       toast.success("Quiz created successfully");
       navigate("/dashboard");
     } catch (error) {
       toast.error("Failed to create quiz");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,6 +39,7 @@ const QuizForm: React.FC = () => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
+            disabled={loading}
           />
           <Input
             type="text"
@@ -42,8 +47,11 @@ const QuizForm: React.FC = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
+            disabled={loading}
           />
-          <Button type="submit" className="w-full">Create Quiz</Button>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Loading..." : "Create Quiz"}
+          </Button>
         </form>
       </Card>
     </div>
@@ -51,3 +59,4 @@ const QuizForm: React.FC = () => {
 };
 
 export default QuizForm;
+

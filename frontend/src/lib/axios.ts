@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL:"https://quizzo-oyf3.onrender.com/api",
+  baseURL:"http://localhost:5000/api",
   withCredentials: true,
 });
 

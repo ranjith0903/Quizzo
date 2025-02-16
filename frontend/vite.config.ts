@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://vercel.com/ranjithkumarhassan-gmailcoms-projects/quizo/GZurGBHmtqNUTevuJXfgus7WG3Mc",
+        target: "https://quizzo-oyf3.onrender.com",
       },
     },
   },

@@ -19,7 +19,7 @@ const Dashboard: React.FC = () => {
       .get<Quiz[]>("/quizzes")
       .then(response => response.data)
       .then(quizzes => setQuizzes(quizzes ?? []))
-      .catch(() => toast.error("Failed to load quizzes"));
+      .catch(() => console.log("no quizzes"));
   }, []);
 
   const handleDelete = (id: string) => {
@@ -33,35 +33,41 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
+    <div className="p-4 md:p-6">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <h1 className="text-2xl font-semibold mb-3 md:mb-0">Dashboard</h1>
         <Link to="/quiz/create">
           <Button>Add Quiz</Button>
         </Link>
       </div>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {quizzes?.map(quiz => (
-          <Card key={quiz.id} className="p-4">
-            <h2 className="text-lg font-medium">{quiz.title}</h2>
-            <p className="text-sm text-gray-600">{quiz.description}</p>
-            <div className="mt-4 flex justify-between">
-              <Link to={`/quiz/edit/${quiz.id}`}>
-                <Button>Edit</Button>
-              </Link>
-              <Button
-                variant="destructive"
-                onClick={() => handleDelete(quiz.id)}
-              >
-                Delete
-              </Button>
-            </div>
-          </Card>
-        ))}
-      </div>
+
+      {quizzes.length === 0 ? (
+        <p className="text-center text-gray-500">No quizzes available</p>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {quizzes.map(quiz => (
+            <Card key={quiz.id} className="p-4 flex flex-col justify-between">
+              <div>
+                <h2 className="text-lg font-medium">{quiz.title}</h2>
+                <p className="text-sm text-gray-600">{quiz.description}</p>
+              </div>
+              <div className="mt-4 flex justify-between">
+                <Link to={`/quiz/edit/${quiz.id}`}>
+                  <Button>Edit</Button>
+                </Link>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleDelete(quiz.id)}
+                >
+                  Delete
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
 export default Dashboard;
-

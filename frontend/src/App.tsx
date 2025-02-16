@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
 import QuizForm from "./pages/QuizForm";
 import RegisterPage from "./pages/Register";
 import EditForm from "./pages/EditForm";
-
+import NavBar from "./components/ui/Navbar";
 
 const App: React.FC = () => {
   const [authenticated, setAuthenticated] = useState<boolean>(
@@ -18,10 +18,9 @@ const App: React.FC = () => {
   }, [authenticated]);
 
   return (
-    <Router>
-      
+    <>
+      <NavBar />
       <Toaster />
-      
       <Routes>
         <Route path="/login" element={<LoginPage setAuthenticated={setAuthenticated} />} />
         <Route
@@ -34,37 +33,19 @@ const App: React.FC = () => {
             )
           }
         />
-        <Route path="/register" element={<RegisterPage/>}/>
-        <Route
-          path="/dashboard"
-          element={
-            <Dashboard/>
-          }
-        />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route
           path="/quiz/edit/:id"
-          element={
-            authenticated ? (
-              <EditForm />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          }
-          />
+          element={authenticated ? <EditForm /> : <Navigate to="/" replace />}
+        />
         <Route
           path="/quiz/create"
-          element={
-            authenticated ? (
-              <QuizForm />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          }
+          element={authenticated ? <QuizForm /> : <Navigate to="/" replace />}
         />
       </Routes>
-    </Router>
+    </>
   );
 };
 
 export default App;
-

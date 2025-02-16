@@ -20,7 +20,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Insert user and correctly extract `insertId`
+     
         const [result] = await pool.query<ResultSetHeader>(
             "INSERT INTO users (username, password) VALUES (?, ?)", 
             [username, hashedPassword]
@@ -64,4 +64,10 @@ export const logout = (req: Request, res: Response, next: NextFunction) => {
         res.json({ message: "Logged out successfully" });
     });
 };
+export const getUser = (req: Request, res: Response, next: NextFunction) => {
+    const userId = (req.session as any).userId;
+    if (!userId) return res.status(401).json({ message: "Unauthorized - Please log in" });
+    res.json({ message: "User found", user: { id: userId } });
+};
+
 

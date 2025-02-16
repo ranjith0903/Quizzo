@@ -7,15 +7,22 @@ import QuizForm from "./pages/QuizForm";
 import RegisterPage from "./pages/Register";
 import EditForm from "./pages/EditForm";
 import NavBar from "./components/ui/Navbar";
+import axios from "./lib/axios";
 
 const App: React.FC = () => {
-  const [authenticated, setAuthenticated] = useState<boolean>(
-    localStorage.getItem("authenticated") === "true"
-  );
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    localStorage.setItem("authenticated", String(authenticated));
-  }, [authenticated]);
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get("/profile");
+        setAuthenticated(response.data);
+      } catch (error) {
+        setAuthenticated(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   return (
     <>
@@ -35,17 +42,12 @@ const App: React.FC = () => {
         />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route
-          path="/quiz/edit/:id"
-          element={authenticated ? <EditForm /> : <Navigate to="/" replace />}
-        />
-        <Route
-          path="/quiz/create"
-          element={authenticated ? <QuizForm /> : <Navigate to="/" replace />}
-        />
+        <Route path="/quiz/edit/:id" element={<EditForm />} />
+        <Route path="/quiz/create" element={<QuizForm />} />
       </Routes>
     </>
   );
 };
 
 export default App;
+

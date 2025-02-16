@@ -11,7 +11,7 @@ dotenv.config();
 const app = express();
 
 // CORS setup (allow frontend to send cookies)
-app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+app.use(cors({ credentials: true, origin: "https://quizo-38eue2ymy-ranjithkumarhassan-gmailcoms-projects.vercel.app" }));
 app.use(express.json());
 
 // Express session setup

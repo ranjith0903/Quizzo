@@ -12,7 +12,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://localhost:5000",
+        target: "https://vercel.com/ranjithkumarhassan-gmailcoms-projects/quizo/GZurGBHmtqNUTevuJXfgus7WG3Mc",
       },
     },
   },
